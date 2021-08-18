@@ -1,6 +1,9 @@
 package main
 
-import "github.com/docker/docker/api/types"
+import (
+	"fmt"
+	"github.com/docker/docker/api/types"
+)
 
 type PostgresDumper struct {
 	Container *types.ContainerJSON
@@ -12,6 +15,35 @@ func NewPostgresDumper(container *types.ContainerJSON) *PostgresDumper {
 	}
 }
 
-func (p *PostgresDumper) Dump() error {
-	panic("implement me")
+func (d *PostgresDumper) Dump() error {
+	fmt.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
+	env := parseEnv(d.Container.Config.Env)
+
+	user := "root"
+	if u, has := env["POSTGRES_USER"]; has {
+		user = u
+	}
+
+	db := ""
+	if d, has := env["POSTGRES_DB"]; has {
+		db = d
+	}
+
+	pw := env["POSTGRES_ROOT_PASSWORD"]
+	if p, has := env["POSTGRES_PASSWORD"]; has {
+		pw = p
+	}
+
+	port := "5432"
+	if p, has := env["POSTGRES_PORT"]; has {
+		port = p
+	}
+
+	host := d.Container.NetworkSettings.DefaultNetworkSettings.IPAddress
+
+	connStr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, pw, host, port, db)
+
+	// TODO: Check postgres image version and use the correct pg_dump
+
+	return runAndSaveCommand(getDumpFilename(d.Container.Name), "pg_dump", "--dbname", connStr)
 }

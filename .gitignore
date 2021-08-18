@@ -1,3 +1,4 @@
 .idea/
 docker-db-backup
 *.sql
+./backups

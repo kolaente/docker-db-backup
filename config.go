@@ -44,7 +44,7 @@ func init() {
 func updateFullBackupPath() {
 	dumpTime = time.Now()
 	config.fullCurrentBackupPath = config.Folder + dumpTime.Format("02-01-2006_15-04-05") + "/"
-	err := os.MkdirAll(config.fullCurrentBackupPath, 0644)
+	err := os.MkdirAll(config.fullCurrentBackupPath, 0744)
 	if err != nil {
 		log.Fatalf("Could not create backup folder: %s\n", err)
 	}
