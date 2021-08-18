@@ -1,6 +1,9 @@
 package main
 
-import "github.com/docker/docker/api/types"
+import (
+	"fmt"
+	"github.com/docker/docker/api/types"
+)
 
 type MysqlDumper struct {
 	Container *types.ContainerJSON
@@ -13,5 +16,30 @@ func NewMysqlDumper(container *types.ContainerJSON) *MysqlDumper {
 }
 
 func (m *MysqlDumper) Dump() error {
-	panic("implement me")
+	fmt.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
+	env := parseEnv(m.Container.Config.Env)
+
+	user := "root"
+	if u, has := env["MYSQL_USER"]; has {
+		user = u
+	}
+
+	db := "--all-databases"
+	if d, has := env["MYSQL_DATABASE"]; has {
+		db = d
+	}
+
+	pw := env["MYSQL_ROOT_PASSWORD"]
+	if p, has := env["MYSQL_PASSWORD"]; has {
+		pw = p
+	}
+
+	port := "3306"
+	if p, has := env["MYSQL_PORT"]; has {
+		port = p
+	}
+
+	host := m.Container.NetworkSettings.DefaultNetworkSettings.IPAddress
+
+	return runAndSaveCommand(getDumpFilename(m.Container.Name), "mysqldump", "--lock-tables=0", "--dump-date", "-u", user, "-p"+pw, "--port", port, "-h", host, db)
 }
