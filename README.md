@@ -1,4 +1,4 @@
-# Zero-Fuzz Docker Database Backup
+# Zero-Fuss Docker Database Backup
 
 A simple tool to create backup of all databases on a host. Supports postgres and mysql/mariadb.
 
