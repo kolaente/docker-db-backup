@@ -15,8 +15,7 @@ func NewMysqlDumper(container *types.ContainerJSON) *MysqlDumper {
 	}
 }
 
-func (m *MysqlDumper) Dump() error {
-	fmt.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
+func (m *MysqlDumper) buildDumpArgs() []string {
 	env := parseEnv(m.Container.Config.Env)
 
 	user := "root"
@@ -41,5 +40,19 @@ func (m *MysqlDumper) Dump() error {
 
 	host := m.Container.NetworkSettings.DefaultNetworkSettings.IPAddress
 
-	return runAndSaveCommand(getDumpFilename(m.Container.Name), "mysqldump", "--lock-tables=0", "--dump-date", "-u", user, "-p"+pw, "--port", port, "-h", host, db)
+	args := []string{"--lock-tables=0", "--dump-date", "-u", user}
+
+	if pw != "" {
+		args = append(args, "-p"+pw)
+	}
+
+	return append(args, "--port", port, "-h", host, db)
+}
+
+func (m *MysqlDumper) Dump() error {
+	fmt.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
+
+	args := m.buildDumpArgs()
+
+	return runAndSaveCommand(getDumpFilename(m.Container.Name), "mysqldump", args...)
 }
