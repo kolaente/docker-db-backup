@@ -40,4 +40,7 @@ func storeContainers(c *client.Client, containers []types.Container) {
 
 		store[container.ID] = dumper
 	}
+
+	// TODO: remove old containers
+
 }
