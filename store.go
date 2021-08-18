@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"log"
@@ -10,12 +9,12 @@ import (
 )
 
 var (
-	store map[string]*types.ContainerJSON
+	store map[string]Dumper
 	lock  sync.Mutex
 )
 
 func init() {
-	store = make(map[string]*types.ContainerJSON)
+	store = make(map[string]Dumper)
 }
 
 func storeContainers(c *client.Client, containers []types.Container) {
@@ -32,8 +31,13 @@ func storeContainers(c *client.Client, containers []types.Container) {
 			log.Fatalf("Could not get Container info: %s", err)
 		}
 
-		store[container.ID] = &info
+		dumper := NewDumperFromContainer(&info)
+		if dumper == nil {
+			continue
+		}
 
-		fmt.Printf("Container: %s, %s image: %s, labels: %v, ip: %v, env: %v\n", info.Name, info.State.Status, info.Image, info.Config.Labels, info.NetworkSettings.Networks, info.Config.Env)
+		log.Printf("Found container %s\n", container.Names)
+
+		store[container.ID] = dumper
 	}
 }
