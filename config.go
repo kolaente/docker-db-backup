@@ -23,14 +23,20 @@ var (
 	dumpTime time.Time
 )
 
+const (
+	envBackupFolder = `BACKUP_FOLDER`
+	envInterval     = `BACKUP_INTERVAL`
+	envMax          = `BACKUP_MAX`
+)
+
 func init() {
 	config = &conf{
 		Folder:     "/backups/",
 		Interval:   time.Hour * 6,
-		MaxBackups: 12,
+		MaxBackups: 24,
 	}
 
-	folder, has := os.LookupEnv("BACKUP_FOLDER")
+	folder, has := os.LookupEnv(envBackupFolder)
 	if has {
 		if !strings.HasSuffix(folder, "/") {
 			folder = folder + "/"
