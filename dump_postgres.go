@@ -15,8 +15,7 @@ func NewPostgresDumper(container *types.ContainerJSON) *PostgresDumper {
 	}
 }
 
-func (d *PostgresDumper) Dump() error {
-	fmt.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
+func (d *PostgresDumper) buildConnStr() string {
 	env := parseEnv(d.Container.Config.Env)
 
 	user := "root"
@@ -24,7 +23,7 @@ func (d *PostgresDumper) Dump() error {
 		user = u
 	}
 
-	db := ""
+	db := "postgres"
 	if d, has := env["POSTGRES_DB"]; has {
 		db = d
 	}
@@ -41,9 +40,13 @@ func (d *PostgresDumper) Dump() error {
 
 	host := d.Container.NetworkSettings.DefaultNetworkSettings.IPAddress
 
-	connStr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, pw, host, port, db)
+	return fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, pw, host, port, db)
+}
 
-	// TODO: Check postgres image version and use the correct pg_dump --> Test!
+func (d *PostgresDumper) Dump() error {
+	fmt.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
+
+	connStr := d.buildConnStr()
 
 	return runAndSaveCommand(getDumpFilename(d.Container.Name), "pg_dump", "--dbname", connStr)
 }
