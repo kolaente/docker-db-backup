@@ -43,7 +43,7 @@ func (d *PostgresDumper) Dump() error {
 
 	connStr := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, pw, host, port, db)
 
-	// TODO: Check postgres image version and use the correct pg_dump
+	// TODO: Check postgres image version and use the correct pg_dump --> Test!
 
 	return runAndSaveCommand(getDumpFilename(d.Container.Name), "pg_dump", "--dbname", connStr)
 }
