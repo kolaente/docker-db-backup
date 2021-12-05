@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 	"strings"
 )
 
 type Dumper interface {
-	Dump() error
+	Dump(c *client.Client) error
 }
 
 func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
@@ -22,12 +23,12 @@ func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
 	return nil
 }
 
-func dumpAllDatabases() error {
+func dumpAllDatabases(c *client.Client) error {
 	lock.Lock()
 	defer lock.Unlock()
 
 	for _, dumper := range store {
-		err := dumper.Dump()
+		err := dumper.Dump(c)
 		if err != nil {
 			return err
 		}

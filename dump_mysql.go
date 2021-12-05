@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 )
 
 type MysqlDumper struct {
@@ -49,10 +50,10 @@ func (m *MysqlDumper) buildDumpArgs() []string {
 	return append(args, "--port", port, "-h", host, db)
 }
 
-func (m *MysqlDumper) Dump() error {
+func (m *MysqlDumper) Dump(c *client.Client) error {
 	fmt.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
 
 	args := m.buildDumpArgs()
 
-	return runAndSaveCommand(getDumpFilename(m.Container.Name), "mysqldump", args...)
+	return runAndSaveCommandInContainer(getDumpFilename(m.Container.Name), c, m.Container, "mysqldump", args...)
 }

@@ -19,7 +19,7 @@ func main() {
 
 	storeContainers(c, containers)
 
-	err = dumpAllDatabases()
+	err = dumpAllDatabases(c)
 	if err != nil {
 		// TODO: Only log errors while dumping dbs
 		log.Fatalf("Could not dump databases: %s", err)
