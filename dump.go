@@ -11,12 +11,13 @@ type Dumper interface {
 }
 
 func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
-	switch container.Config.Image {
-	case "mysql":
-		fallthrough
-	case "mariadb":
+
+	// Containers contain the tags, therefore we need to check them one by one
+	if strings.HasPrefix(container.Config.Image, "mysql") || strings.HasPrefix(container.Config.Image, "mariadb") {
 		return NewMysqlDumper(container)
-	case "postgres":
+	}
+
+	if strings.HasPrefix(container.Config.Image, "postgres") {
 		return NewPostgresDumper(container)
 	}
 
