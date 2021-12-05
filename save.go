@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -10,7 +11,7 @@ import (
 func runAndSaveCommand(filename, command string, args ...string) error {
 	c := exec.Command(command, args...)
 
-	fmt.Printf("Running %s\n\n", c.String())
+	//fmt.Printf("Running %s\n\n", c.String())
 
 	f, err := os.Create(filename)
 	if err != nil {
@@ -23,6 +24,9 @@ func runAndSaveCommand(filename, command string, args ...string) error {
 		return err
 	}
 
+	var stderr bytes.Buffer
+	c.Stderr = &stderr
+
 	err = c.Start()
 	if err != nil {
 		return err
@@ -33,5 +37,11 @@ func runAndSaveCommand(filename, command string, args ...string) error {
 		return err
 	}
 
-	return c.Wait()
+	err = c.Wait()
+	if err != nil {
+		fmt.Printf(stderr.String())
+		return err
+	}
+
+	return nil
 }
