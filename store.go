@@ -22,6 +22,10 @@ func storeContainers(c *client.Client, containers []types.Container) {
 	defer lock.Unlock()
 
 	for _, container := range containers {
+		delete(store, container.ID)
+	}
+
+	for _, container := range containers {
 		if container.State != "running" {
 			continue
 		}
@@ -40,7 +44,4 @@ func storeContainers(c *client.Client, containers []types.Container) {
 
 		store[container.ID] = dumper
 	}
-
-	// TODO: remove old containers
-
 }
