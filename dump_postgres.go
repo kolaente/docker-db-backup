@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/docker/docker/api/types"
+	"strings"
 )
 
 type PostgresDumper struct {
@@ -43,10 +44,23 @@ func (d *PostgresDumper) buildConnStr() string {
 	return fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", user, pw, host, port, db)
 }
 
+func findPgVersion(env []string) string {
+	for _, s := range env {
+		if strings.HasPrefix(s, "PG_MAJOR=") {
+			return strings.TrimPrefix(s, "PG_MAJOR=")
+		}
+	}
+
+	return ""
+}
+
 func (d *PostgresDumper) Dump() error {
 	fmt.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
 
 	connStr := d.buildConnStr()
 
-	return runAndSaveCommand(getDumpFilename(d.Container.Name), "pg_dump", "--dbname", connStr)
+	// The postgres version must match the one the db server is running
+	pgVersion := findPgVersion(d.Container.Config.Env)
+
+	return runAndSaveCommand(getDumpFilename(d.Container.Name), "pg_dump"+pgVersion, "--dbname", connStr)
 }

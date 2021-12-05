@@ -115,3 +115,28 @@ func TestPostgresDumper_buildConnStr(t *testing.T) {
 		})
 	}
 }
+
+func TestFindPGVersionFromEnv(t *testing.T) {
+	t.Run("no PG_MAJOR", func(t *testing.T) {
+		pgVersion := findPgVersion([]string{})
+		if pgVersion != "" {
+			t.Errorf("Version is not empty")
+		}
+	})
+	t.Run("pg 14", func(t *testing.T) {
+		pgVersion := findPgVersion([]string{
+			"POSTGRES_PASSWORD=test",
+			"POSTGRES_USER=user",
+			"POSTGRES_DB=test",
+			"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/14/bin",
+			"GOSU_VERSION=1.14",
+			"LANG=en_US.utf8",
+			"PG_MAJOR=14",
+			"PG_VERSION=14.1-1.pgdg110+1",
+			"PGDATA=/var/lib/postgresql/data",
+		})
+		if pgVersion != "14" {
+			t.Errorf("Version is not 14")
+		}
+	})
+}
