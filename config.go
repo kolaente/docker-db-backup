@@ -34,7 +34,7 @@ func init() {
 	config = &conf{
 		Folder:     "/backups/",
 		Interval:   time.Hour * 6,
-		MaxBackups: 10,
+		MaxBackups: 12,
 	}
 
 	folder, has := os.LookupEnv(envBackupFolder)
