@@ -19,12 +19,15 @@ func main() {
 
 	storeContainers(c, containers)
 
+	err = cleanupOldBackups()
+	if err != nil {
+		log.Fatalf("Could not clean old backups: %s", err)
+	}
+
 	err = dumpAllDatabases(c)
 	if err != nil {
-		// TODO: Only log errors while dumping dbs
 		log.Fatalf("Could not dump databases: %s", err)
 	}
 
 	// TODO: Cron
-	// TODO: Cleanup old
 }

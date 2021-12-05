@@ -16,7 +16,7 @@ type conf struct {
 	Folder                string // Backup folder _with_ trailing slash
 	fullCurrentBackupPath string
 	Interval              time.Duration
-	MaxBackups            int64
+	MaxBackups            int
 }
 
 var (
@@ -34,7 +34,7 @@ func init() {
 	config = &conf{
 		Folder:     "/backups/",
 		Interval:   time.Hour * 6,
-		MaxBackups: 24,
+		MaxBackups: 10,
 	}
 
 	folder, has := os.LookupEnv(envBackupFolder)
@@ -58,10 +58,11 @@ func init() {
 
 	max, has := os.LookupEnv(envMax)
 	if has {
-		config.MaxBackups, err = strconv.ParseInt(max, 10, 64)
+		maxBackups, err := strconv.ParseInt(max, 10, 32)
 		if err != nil {
 			log.Fatalf("Invalid max: %s\n", err)
 		}
+		config.MaxBackups = int(maxBackups)
 	}
 
 	updateFullBackupPath()
