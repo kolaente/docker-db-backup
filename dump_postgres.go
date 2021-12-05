@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	"log"
 )
 
 type PostgresDumper struct {
@@ -45,7 +46,7 @@ func (d *PostgresDumper) buildConnStr() string {
 }
 
 func (d *PostgresDumper) Dump(c *client.Client) error {
-	fmt.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
+	log.Printf("Dumping postgres database from container %s...\n", d.Container.Name)
 
 	connStr := d.buildConnStr()
 

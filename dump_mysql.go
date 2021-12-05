@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	"log"
 )
 
 type MysqlDumper struct {
@@ -51,7 +51,7 @@ func (m *MysqlDumper) buildDumpArgs() []string {
 }
 
 func (m *MysqlDumper) Dump(c *client.Client) error {
-	fmt.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
+	log.Printf("Dumping mysql database from container %s...\n", m.Container.Name)
 
 	args := m.buildDumpArgs()
 
