@@ -37,6 +37,6 @@ Default: `3h`
 ### `BACKUP_MAX`
 
 How many backups to keep. If more backups are stored in the backup folder, the oldest one will be removed until there
-are only as many as this config variabls.
+are only as many as this config variable.
 
 Default: `24`
