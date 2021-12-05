@@ -4,21 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
-	"os"
-
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
+	"io"
+	"os"
 )
 
 func runAndSaveCommandInContainer(filename string, c *client.Client, container *types.ContainerJSON, command string, args ...string) error {
-	f, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
 	ctx := context.Background()
 
 	config := types.ExecConfig{
@@ -48,27 +41,23 @@ func runAndSaveCommandInContainer(filename string, c *client.Client, container *
 		outputDone <- err
 	}()
 
-	select {
-	case err := <-outputDone:
-		if err != nil {
-			return err
-		}
-		break
-
-	case <-ctx.Done():
-		return ctx.Err()
-	}
-
-	_, err = c.ContainerExecInspect(ctx, r.ID)
+	err = <-outputDone
 	if err != nil {
 		fmt.Printf(errBuf.String())
 		return err
 	}
 
-	_, err = io.Copy(f, &outBuf)
+	_, err = c.ContainerExecInspect(ctx, r.ID)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, &outBuf)
+	return err
 }
