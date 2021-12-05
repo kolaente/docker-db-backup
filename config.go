@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -44,6 +45,25 @@ func init() {
 
 		config.Folder = folder
 	}
+
+	var err error
+
+	interval, has := os.LookupEnv(envInterval)
+	if has {
+		config.Interval, err = time.ParseDuration(interval)
+		if err != nil {
+			log.Fatalf("Invalid interval: %s\n", err)
+		}
+	}
+
+	max, has := os.LookupEnv(envMax)
+	if has {
+		config.MaxBackups, err = strconv.ParseInt(max, 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid max: %s\n", err)
+		}
+	}
+
 	updateFullBackupPath()
 }
 
