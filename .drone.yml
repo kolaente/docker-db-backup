@@ -1,0 +1,59 @@
+kind: pipeline
+name: testing
+
+trigger:
+  branch:
+    include:
+      - main
+  event:
+    include:
+      - push
+      - pull_request
+
+steps:
+  - name: build
+    image: vikunja/golang-build:latest
+    pull: true
+    environment:
+      GOPROXY: 'https://goproxy.kolaente.de'
+    commands:
+      - go build .
+
+  - name: test
+    image: vikunja/golang-build:latest
+    pull: true
+    environment:
+      GOPROXY: 'https://goproxy.kolaente.de'
+      BACKUP_FOLDER: ./backups
+    commands:
+      - go test
+
+---
+kind: pipeline
+name: docker
+
+depends_on:
+  - testing
+
+trigger:
+  ref:
+    - refs/heads/main
+    - "refs/tags/**"
+
+steps:
+  - name: fetch-tags
+    image: docker:git
+    commands:
+      - git fetch --tags
+
+  - name: docker-prod
+    image: plugins/docker:linux-amd64
+    pull: true
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: kolaente/db-backup
+      tags: latest
+    depends_on: [ fetch-tags ]

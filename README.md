@@ -1,5 +1,7 @@
 # Zero-Fuss Docker Database Backup
 
+[![Build Status](https://drone.kolaente.de/api/badges/konrad/docker-db-backup/status.svg?ref=refs/heads/main)](https://drone.kolaente.de/konrad/docker-db-backup)
+
 A simple tool to create backup of all databases on a host. Supports postgres and mysql/mariadb.
 
 Successor to [this script](https://kolaente.dev/konrad/docker-database-backup).
