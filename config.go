@@ -15,7 +15,7 @@ import (
 type conf struct {
 	Folder                string // Backup folder _with_ trailing slash
 	fullCurrentBackupPath string
-	Interval              time.Duration
+	Schedule              string
 	MaxBackups            int
 }
 
@@ -26,14 +26,14 @@ var (
 
 const (
 	envBackupFolder = `BACKUP_FOLDER`
-	envInterval     = `BACKUP_INTERVAL`
+	envSchedule     = `BACKUP_SCHEDULE`
 	envMax          = `BACKUP_MAX`
 )
 
 func init() {
 	config = &conf{
 		Folder:     "/backups/",
-		Interval:   time.Hour * 6,
+		Schedule:   "* */6 * * * *",
 		MaxBackups: 12,
 	}
 
@@ -46,14 +46,9 @@ func init() {
 		config.Folder = folder
 	}
 
-	var err error
-
-	interval, has := os.LookupEnv(envInterval)
+	schedule, has := os.LookupEnv(envSchedule)
 	if has {
-		config.Interval, err = time.ParseDuration(interval)
-		if err != nil {
-			log.Fatalf("Invalid interval: %s\n", err)
-		}
+		config.Schedule = schedule
 	}
 
 	max, has := os.LookupEnv(envMax)

@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/robfig/cron/v3"
 	"log"
-	"time"
 )
 
 func main() {
@@ -11,7 +11,8 @@ func main() {
 		log.Fatalf("Could not create client: %s", err)
 	}
 
-	for {
+	cr := cron.New()
+	_, err = cr.AddFunc(config.Schedule, func() {
 		updateFullBackupPath()
 
 		containers, err := getContainers(c)
@@ -32,8 +33,9 @@ func main() {
 		}
 
 		log.Println("Done.")
-		log.Printf("Sleeping for %s\n", config.Interval)
-
-		time.Sleep(config.Interval)
+	})
+	if err != nil {
+		log.Fatalf("Could not create cron job: %s\n", err)
 	}
+	cr.Start()
 }

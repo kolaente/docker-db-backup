@@ -46,12 +46,13 @@ Where all backup files will be stored.
 
 Default: `/backups`
 
-### `BACKUP_INTERVAL`
+### `BACKUP_SCHEDULE`
 
-The interval at which backups will happen. Must be a parsable string
-as [time.Duration](https://pkg.go.dev/time#ParseDuration). Must be positive.
+The cron schedule at which the backup job runs, using the common unix cron syntax.
 
-Default: `3h`
+Check out [crontab.dev](https://crontab.dev/) for a nice explanation of the schedule.
+
+Default: `* */6 * * * *` (every 6 hours)
 
 ### `BACKUP_MAX`
 
