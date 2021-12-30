@@ -33,7 +33,6 @@ services:
       - ./backups:/backups
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
-
 ```
 
 ## Config
