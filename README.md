@@ -59,3 +59,15 @@ How many backups to keep. If more backups are stored in the backup folder, the o
 are only as many as this config variable.
 
 Default: `12`
+
+## Building from source
+
+This project uses go modules, so you'll need at least go 1.11 to compile it.
+
+Simply run
+
+```
+go build .
+```
+
+to build the binary.
