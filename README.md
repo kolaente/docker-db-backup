@@ -19,6 +19,23 @@ as they are started and won't try to back up containers which have gone away.
 
 When running, all backups for the current run are time-stamped into a sub folder of the backup directory (see below).
 
+### Docker Compose
+
+If you're running docker-compose, you can use a setup similar to the following compose file to run the backup:
+
+```yaml
+version: '2'
+services:
+  backup:
+    image: kolaente/db-backup
+    restart: unless-stopped
+    volumes:
+      - ./backups:/backups
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+```
+
 ## Config
 
 All config is done with environment variables.
