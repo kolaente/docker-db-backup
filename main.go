@@ -37,5 +37,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not create cron job: %s\n", err)
 	}
-	cr.Start()
+	cr.Run()
 }
