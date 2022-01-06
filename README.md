@@ -51,7 +51,7 @@ The cron schedule at which the backup job runs, using the common unix cron synta
 
 Check out [crontab.dev](https://crontab.dev/) for a nice explanation of the schedule.
 
-Default: `* */6 * * * *` (every 6 hours)
+Default: `0 */6 * * *` (every 6 hours)
 
 ### `BACKUP_MAX`
 

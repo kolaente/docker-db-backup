@@ -33,7 +33,7 @@ const (
 func init() {
 	config = &conf{
 		Folder:     "/backups/",
-		Schedule:   "* */6 * * * *",
+		Schedule:   "0 */6 * * *",
 		MaxBackups: 12,
 	}
 
