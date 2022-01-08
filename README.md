@@ -11,7 +11,7 @@ Successor to [this script](https://kolaente.dev/konrad/docker-database-backup).
 Simply point it at your docker socket, mount a backup volume and be done:
 
 ```
-docker run -v $PWD:/backups -v /var/run/docker.sock:/var/run/docker.sock kolaente/db-backup
+docker run -v $PWD/backups:/backups -v /var/run/docker.sock:/var/run/docker.sock kolaente/db-backup
 ```
 
 The tool will find all database containers and create backups of them periodically. It will also discover new containers
