@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const containerLabelName = `de.kolaente.db-backup`
+
 type Dumper interface {
 	Dump(c *client.Client) error
 }
@@ -13,11 +15,11 @@ type Dumper interface {
 func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
 
 	// Containers contain the tags, therefore we need to check them one by one
-	if strings.HasPrefix(container.Config.Image, "mysql") || strings.HasPrefix(container.Config.Image, "mariadb") {
+	if strings.HasPrefix(container.Config.Image, "mysql") || strings.HasPrefix(container.Config.Image, "mariadb") || container.Config.Labels[containerLabelName] == "mysql" {
 		return NewMysqlDumper(container)
 	}
 
-	if strings.HasPrefix(container.Config.Image, "postgres") {
+	if strings.HasPrefix(container.Config.Image, "postgres") || container.Config.Labels[containerLabelName] == "postgres" {
 		return NewPostgresDumper(container)
 	}
 

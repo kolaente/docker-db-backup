@@ -14,10 +14,17 @@ Simply point it at your docker socket, mount a backup volume and be done:
 docker run -v $PWD/backups:/backups -v /var/run/docker.sock:/var/run/docker.sock kolaente/db-backup
 ```
 
-The tool will find all database containers and create backups of them periodically. It will also discover new containers
+The tool will find all database containers running an official [`mysql`](https://hub.docker.com/_/mysql), 
+[`mariadb`](https://hub.docker.com/_/mariadb) or [`postgres`](https://hub.docker.com/_/postgres) image and 
+create backups of them periodically. It will also discover new containers 
 as they are started and won't try to back up containers which have gone away.
 
 When running, all backups for the current run are time-stamped into a sub folder of the backup directory (see below).
+
+### Using labels
+
+To make the backup tool discover other non-offical containers as well you can add the label `de.kolaente.db-backup` to 
+any container with a value of `mysql` or `postgres` to treat it as a mysql or postgres container.
 
 ### Docker Compose
 
