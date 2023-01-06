@@ -41,7 +41,7 @@ func (m *MysqlDumper) buildDumpArgs() []string {
 
 	host := m.Container.NetworkSettings.DefaultNetworkSettings.IPAddress
 
-	args := []string{"--lock-tables=0", "--dump-date", "-u", user}
+	args := []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", user}
 
 	if pw != "" {
 		args = append(args, "-p"+pw)
