@@ -66,8 +66,6 @@ func init() {
 	if has {
 		config.CompletionWebhookURL = webhookURL
 	}
-
-	updateFullBackupPath()
 }
 
 func updateFullBackupPath() {
