@@ -32,6 +32,11 @@ func main() {
 			log.Fatalf("Could not dump databases: %s", err)
 		}
 
+		err = callWebhook()
+		if err != nil {
+			log.Fatalf("Could not call completion webhook: %s", err)
+		}
+
 		log.Println("Done.")
 	})
 	if err != nil {

@@ -67,6 +67,11 @@ are only as many as this config variable.
 
 Default: `12`
 
+### `BACKUP_COMPLETION_WEBHOOK_URL`
+
+If provided, the tool will do an empty GET request to this URL to indicate it successfully completed the backup job.
+You can use this with other tools to monitor if backups are completed as they should.
+
 ## Building from source
 
 This project uses go modules, so you'll need at least go 1.11 to compile it.

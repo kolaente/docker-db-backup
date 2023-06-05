@@ -17,6 +17,7 @@ type conf struct {
 	fullCurrentBackupPath string
 	Schedule              string
 	MaxBackups            int
+	CompletionWebhookURL  string
 }
 
 var (
@@ -25,9 +26,10 @@ var (
 )
 
 const (
-	envBackupFolder = `BACKUP_FOLDER`
-	envSchedule     = `BACKUP_SCHEDULE`
-	envMax          = `BACKUP_MAX`
+	envBackupFolder         = `BACKUP_FOLDER`
+	envSchedule             = `BACKUP_SCHEDULE`
+	envMax                  = `BACKUP_MAX`
+	envCompletionWebhookURL = `BACKUP_COMPLETION_WEBHOOK_URL`
 )
 
 func init() {
@@ -58,6 +60,11 @@ func init() {
 			log.Fatalf("Invalid max: %s\n", err)
 		}
 		config.MaxBackups = int(maxBackups)
+	}
+
+	webhookURL, has := os.LookupEnv(envCompletionWebhookURL)
+	if has {
+		config.CompletionWebhookURL = webhookURL
 	}
 
 	updateFullBackupPath()
