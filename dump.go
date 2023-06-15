@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
-	"github.com/google/martian/log"
+	"log"
 	"strings"
 )
 
@@ -34,7 +34,7 @@ func dumpAllDatabases(c *client.Client) {
 	for containerID, dumper := range store {
 		err := dumper.Dump(c)
 		if err != nil {
-			log.Errorf("Could not dump database from container %s: %v", containerID, err)
+			log.Printf("Could not dump database from container %s: %v", containerID, err)
 		}
 	}
 }
