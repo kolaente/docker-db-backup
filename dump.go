@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	"github.com/google/martian/log"
 	"strings"
 )
 
@@ -26,18 +27,16 @@ func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
 	return nil
 }
 
-func dumpAllDatabases(c *client.Client) error {
+func dumpAllDatabases(c *client.Client) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	for _, dumper := range store {
+	for containerID, dumper := range store {
 		err := dumper.Dump(c)
 		if err != nil {
-			return err
+			log.Errorf("Could not dump database from container %s: %v", containerID, err)
 		}
 	}
-
-	return nil
 }
 
 func getDumpFilename(containerName string) string {

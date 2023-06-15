@@ -27,10 +27,7 @@ func main() {
 			log.Fatalf("Could not clean old backups: %s", err)
 		}
 
-		err = dumpAllDatabases(c)
-		if err != nil {
-			log.Fatalf("Could not dump databases: %s", err)
-		}
+		dumpAllDatabases(c)
 
 		err = callWebhook()
 		if err != nil {
