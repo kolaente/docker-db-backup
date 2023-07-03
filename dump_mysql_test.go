@@ -31,7 +31,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
 		},
 		{
 			name: "no user",
@@ -45,7 +45,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "root", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "root", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
 		},
 		{
 			name: "no password",
@@ -59,7 +59,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "loremipsum", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "loremipsum", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
 		},
 		{
 			name: "no password, but root",
@@ -74,7 +74,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "roooot", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "roooot", "--port", "1234", "-h", "1.2.3.4", "ipsum"},
 		},
 		{
 			name: "no port",
@@ -88,7 +88,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "3306", "-h", "1.2.3.4", "ipsum"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "3306", "-h", "1.2.3.4", "ipsum"},
 		},
 		{
 			name: "no db",
@@ -102,7 +102,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 					},
 				},
 			},
-			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--source-data=2", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "--all-databases"},
+			want: []string{"--lock-tables=0", "--dump-date", "--single-transaction", "--routines", "--triggers", "--events", "-u", "loremipsum", "-p" + "notapassword", "--port", "1234", "-h", "1.2.3.4", "--all-databases"},
 		},
 	}
 	for _, tt := range tests {
