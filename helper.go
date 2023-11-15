@@ -7,6 +7,9 @@ func parseEnv(envs []string) map[string]string {
 
 	for _, s := range envs {
 		parts := strings.SplitN(s, "=", 2)
+		if len(parts) < 2 {
+			continue
+		}
 		env[parts[0]] = parts[1]
 	}
 
