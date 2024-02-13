@@ -18,6 +18,7 @@ type conf struct {
 	Schedule              string
 	MaxBackups            int
 	CompletionWebhookURL  string
+	CompressBackups       bool
 }
 
 var (
@@ -30,6 +31,7 @@ const (
 	envSchedule             = `BACKUP_SCHEDULE`
 	envMax                  = `BACKUP_MAX`
 	envCompletionWebhookURL = `BACKUP_COMPLETION_WEBHOOK_URL`
+	envCompressBackups      = `BACKUP_COMPRESS`
 )
 
 func init() {
@@ -65,6 +67,11 @@ func init() {
 	webhookURL, has := os.LookupEnv(envCompletionWebhookURL)
 	if has {
 		config.CompletionWebhookURL = webhookURL
+	}
+
+	compress, has := os.LookupEnv(envCompressBackups)
+	if has {
+		config.CompressBackups = compress == "1" || compress == "true"
 	}
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
@@ -10,16 +11,21 @@ import (
 	"github.com/docker/docker/client"
 )
 
-func runAndSaveCommandInContainer(filename string, c *client.Client, container *types.ContainerJSON, command string, args ...string) error {
+func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJSON, command string, args ...string) error {
 	ctx := context.Background()
 
-	config := types.ExecConfig{
+	filename := getDumpFilename(container.Name)
+	if config.CompressBackups {
+		filename += ".gz"
+	}
+
+	containerConfig := types.ExecConfig{
 		AttachStderr: true,
 		AttachStdout: true,
 		Cmd:          append([]string{command}, args...),
 	}
 
-	r, err := c.ContainerExecCreate(ctx, container.ID, config)
+	r, err := c.ContainerExecCreate(ctx, container.ID, containerConfig)
 	if err != nil {
 		return err
 	}
@@ -36,7 +42,18 @@ func runAndSaveCommandInContainer(filename string, c *client.Client, container *
 	}
 	defer f.Close()
 
-	_, err = io.Copy(f, resp.Reader)
+	var target io.Writer = f
+
+	if config.CompressBackups {
+		gw, err := gzip.NewWriterLevel(f, gzip.BestCompression)
+		if err != nil {
+			return err
+		}
+		defer gw.Close()
+		target = gw
+	}
+
+	_, err = io.Copy(target, resp.Reader)
 	if err != nil {
 		return err
 	}

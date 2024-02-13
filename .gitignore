@@ -1,4 +1,5 @@
 .idea/
 docker-db-backup
 *.sql
+*.gz
 ./backups

@@ -26,5 +26,5 @@ func (d *PostgresDumper) Dump(c *client.Client) error {
 		user = u
 	}
 
-	return runAndSaveCommandInContainer(getDumpFilename(d.Container.Name), c, d.Container, "pg_dumpall", "-U", user)
+	return runAndSaveCommandInContainer(c, d.Container, "pg_dumpall", "-U", user)
 }

@@ -63,5 +63,5 @@ func (m *MysqlDumper) Dump(c *client.Client) error {
 
 	args := m.buildDumpArgs()
 
-	return runAndSaveCommandInContainer(getDumpFilename(m.Container.Name), c, m.Container, "mysqldump", args...)
+	return runAndSaveCommandInContainer(c, m.Container, "mysqldump", args...)
 }
