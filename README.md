@@ -60,6 +60,12 @@ Check out [crontab.dev](https://crontab.dev/) for a nice explanation of the sche
 
 Default: `0 */6 * * *` (every 6 hours)
 
+### `BACKUP_NO_CRON`
+
+If provided, runs the backup only once without a cron schedule. This is useful for one-off backups of testing if the configuration works.
+
+Default: `false`
+
 ### `BACKUP_MAX`
 
 How many backups to keep. If more backups are stored in the backup folder, the oldest one will be removed until there
