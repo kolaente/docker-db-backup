@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 	"log"
 	"strings"
+
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
 const containerLabelName = `de.kolaente.db-backup`
@@ -13,15 +14,15 @@ type Dumper interface {
 	Dump(c *client.Client) error
 }
 
-func NewDumperFromContainer(container *types.ContainerJSON) Dumper {
+func NewDumperFromContainer(ctr *container.InspectResponse) Dumper {
 
 	// Containers contain the tags, therefore we need to check them one by one
-	if strings.HasPrefix(container.Config.Image, "mysql") || strings.HasPrefix(container.Config.Image, "mariadb") || container.Config.Labels[containerLabelName] == "mysql" {
-		return NewMysqlDumper(container)
+	if strings.HasPrefix(ctr.Config.Image, "mysql") || strings.HasPrefix(ctr.Config.Image, "mariadb") || ctr.Config.Labels[containerLabelName] == "mysql" {
+		return NewMysqlDumper(ctr)
 	}
 
-	if strings.HasPrefix(container.Config.Image, "postgres") || container.Config.Labels[containerLabelName] == "postgres" {
-		return NewPostgresDumper(container)
+	if strings.HasPrefix(ctr.Config.Image, "postgres") || ctr.Config.Labels[containerLabelName] == "postgres" {
+		return NewPostgresDumper(ctr)
 	}
 
 	return nil

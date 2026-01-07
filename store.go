@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 	"log"
 	"sync"
+
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
 var (
@@ -17,7 +18,7 @@ func init() {
 	store = make(map[string]Dumper)
 }
 
-func storeContainers(c *client.Client, containers []types.Container) {
+func storeContainers(c *client.Client, containers []container.Summary) {
 	lock.Lock()
 	defer lock.Unlock()
 

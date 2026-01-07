@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 	"log"
+
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
 type MysqlDumper struct {
-	Container *types.ContainerJSON
+	Container *container.InspectResponse
 }
 
-func NewMysqlDumper(container *types.ContainerJSON) *MysqlDumper {
+func NewMysqlDumper(ctr *container.InspectResponse) *MysqlDumper {
 	return &MysqlDumper{
-		Container: container,
+		Container: ctr,
 	}
 }
 
