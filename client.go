@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
@@ -11,5 +13,5 @@ func getClient() (*client.Client, error) {
 }
 
 func getContainers(c *client.Client) ([]types.Container, error) {
-	return c.ContainerList(context.Background(), types.ContainerListOptions{All: true})
+	return c.ContainerList(context.Background(), container.ListOptions{All: true})
 }

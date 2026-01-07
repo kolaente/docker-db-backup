@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/docker/docker/api/types"
+	containertypes "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
@@ -19,7 +20,7 @@ func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJS
 		filename += ".gz"
 	}
 
-	containerConfig := types.ExecConfig{
+	containerConfig := containertypes.ExecOptions{
 		AttachStderr: true,
 		AttachStdout: true,
 		Cmd:          append([]string{command}, args...),
@@ -30,7 +31,7 @@ func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJS
 		return err
 	}
 
-	resp, err := c.ContainerExecAttach(ctx, r.ID, types.ExecStartCheck{})
+	resp, err := c.ContainerExecAttach(ctx, r.ID, containertypes.ExecStartOptions{})
 	if err != nil {
 		return err
 	}
