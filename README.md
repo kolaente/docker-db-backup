@@ -1,6 +1,6 @@
 # Zero-Fuss Docker Database Backup
 
-[![Build Status](https://drone.kolaente.de/api/badges/konrad/docker-db-backup/status.svg?ref=refs/heads/main)](https://drone.kolaente.de/konrad/docker-db-backup)
+[![CI](https://github.com/kolaente/docker-db-backup/actions/workflows/ci.yml/badge.svg)](https://github.com/kolaente/docker-db-backup/actions/workflows/ci.yml)
 
 A simple tool to create backup of all databases on a host. Supports postgres and mysql/mariadb.
 
@@ -31,7 +31,6 @@ any container with a value of `mysql` or `postgres` to treat it as a mysql or po
 If you're running docker-compose, you can use a setup similar to the following compose file to run the backup:
 
 ```yaml
-version: '2'
 services:
   backup:
     image: kolaente/db-backup
