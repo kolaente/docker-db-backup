@@ -7,30 +7,30 @@ import (
 	"io"
 	"os"
 
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 )
 
-func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJSON, command string, args ...string) error {
+func runAndSaveCommandInContainer(c *client.Client, ctr *container.InspectResponse, command string, args ...string) error {
 	ctx := context.Background()
 
-	filename := getDumpFilename(container.Name)
+	filename := getDumpFilename(ctr.Name)
 	if config.CompressBackups {
 		filename += ".gz"
 	}
 
-	containerConfig := types.ExecConfig{
+	execConfig := container.ExecOptions{
 		AttachStderr: true,
 		AttachStdout: true,
 		Cmd:          append([]string{command}, args...),
 	}
 
-	r, err := c.ContainerExecCreate(ctx, container.ID, containerConfig)
+	r, err := c.ContainerExecCreate(ctx, ctr.ID, execConfig)
 	if err != nil {
 		return err
 	}
 
-	resp, err := c.ContainerExecAttach(ctx, r.ID, types.ExecStartCheck{})
+	resp, err := c.ContainerExecAttach(ctx, r.ID, container.ExecStartOptions{})
 	if err != nil {
 		return err
 	}
@@ -59,8 +59,11 @@ func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJS
 	}
 
 	execInspect, err := c.ContainerExecInspect(ctx, r.ID)
+	if err != nil {
+		return err
+	}
 	if execInspect.ExitCode != 0 {
-		return fmt.Errorf("backup from container %s failed with exit code %d", container.Name, execInspect.ExitCode)
+		return fmt.Errorf("backup from container %s failed with exit code %d", ctr.Name, execInspect.ExitCode)
 	}
 	return err
 }

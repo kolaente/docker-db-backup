@@ -1,26 +1,26 @@
 package main
 
 import (
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/container"
 	"reflect"
 	"testing"
+
+	"github.com/docker/docker/api/types/container"
 )
 
 func TestMysqlDumper_buildDumpArgs(t *testing.T) {
-	nw := &types.NetworkSettings{
-		DefaultNetworkSettings: types.DefaultNetworkSettings{
+	nw := &container.NetworkSettings{
+		DefaultNetworkSettings: container.DefaultNetworkSettings{
 			IPAddress: "1.2.3.4",
 		},
 	}
 	tests := []struct {
-		name      string
-		container *types.ContainerJSON
-		want      []string
+		name string
+		ctr  *container.InspectResponse
+		want []string
 	}{
 		{
 			name: "values for everything",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -35,7 +35,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 		},
 		{
 			name: "no user",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -49,7 +49,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 		},
 		{
 			name: "no password",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -63,7 +63,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 		},
 		{
 			name: "no password, but root",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -78,7 +78,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 		},
 		{
 			name: "no port",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -92,7 +92,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 		},
 		{
 			name: "no db",
-			container: &types.ContainerJSON{
+			ctr: &container.InspectResponse{
 				NetworkSettings: nw,
 				Config: &container.Config{
 					Env: []string{
@@ -108,7 +108,7 @@ func TestMysqlDumper_buildDumpArgs(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &MysqlDumper{
-				Container: tt.container,
+				Container: tt.ctr,
 			}
 			if got := m.buildDumpArgs(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("buildDumpArgs() = %v, want %v", got, tt.want)

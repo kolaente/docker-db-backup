@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 	"log"
+
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
 type PostgresDumper struct {
-	Container *types.ContainerJSON
+	Container *container.InspectResponse
 }
 
-func NewPostgresDumper(container *types.ContainerJSON) *PostgresDumper {
+func NewPostgresDumper(ctr *container.InspectResponse) *PostgresDumper {
 	return &PostgresDumper{
-		Container: container,
+		Container: ctr,
 	}
 }
 
