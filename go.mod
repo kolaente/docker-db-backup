@@ -3,7 +3,7 @@ module kolaente.dev/konrad/docker-db-backup
 go 1.21
 
 require (
-	github.com/docker/docker v20.10.8+incompatible
+	github.com/docker/docker v20.10.27+incompatible
 	github.com/robfig/cron/v3 v3.0.1
 )
 
