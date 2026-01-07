@@ -60,6 +60,9 @@ func runAndSaveCommandInContainer(c *client.Client, container *types.ContainerJS
 	}
 
 	execInspect, err := c.ContainerExecInspect(ctx, r.ID)
+	if err != nil {
+		return err
+	}
 	if execInspect.ExitCode != 0 {
 		return fmt.Errorf("backup from container %s failed with exit code %d", container.Name, execInspect.ExitCode)
 	}
