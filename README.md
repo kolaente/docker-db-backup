@@ -81,6 +81,31 @@ You can use this with other tools to monitor if backups are completed as they sh
 
 If set provided and set to `true`, all backups will be compressed using gzip.
 
+## Restoring
+
+Backups are plain SQL files at `<BACKUP_FOLDER>/<timestamp>/<container>.sql` (`.sql.gz` if compressed).
+Pipe them into the database container. If compressed, use `gunzip -c <file> |` instead of `< <file>`.
+
+### Postgres
+
+Backups are made with `pg_dumpall` and contain all databases and roles. Restore into a fresh, empty container:
+
+```
+docker exec -i <container> psql -U <POSTGRES_USER> -d postgres < backups/<timestamp>/<container>.sql
+```
+
+An error that the `POSTGRES_USER` role already exists is expected and harmless.
+
+### MySQL / MariaDB
+
+If `MYSQL_DATABASE` is set on the container, only that database is dumped and you need to pass its name:
+
+```
+docker exec -i <container> mysql -u <user> -p<password> <database> < backups/<timestamp>/<container>.sql
+```
+
+Otherwise all databases are dumped; omit `<database>`. On MariaDB 11+ images, use `mariadb` instead of `mysql`.
+
 ## Building from source
 
 This project uses go modules, so you'll need at least go 1.11 to compile it.
