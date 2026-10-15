@@ -9,6 +9,7 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
+	"github.com/docker/docker/pkg/stdcopy"
 )
 
 func runAndSaveCommandInContainer(c *client.Client, ctr *container.InspectResponse, command string, args ...string) error {
@@ -53,7 +54,8 @@ func runAndSaveCommandInContainer(c *client.Client, ctr *container.InspectRespon
 		target = gw
 	}
 
-	_, err = io.Copy(target, resp.Reader)
+	// Non-TTY exec output is multiplexed with frame headers.
+	_, err = stdcopy.StdCopy(target, os.Stderr, resp.Reader)
 	if err != nil {
 		return err
 	}
